@@ -36,7 +36,7 @@ class Key:
     created: datetime
     valid_until: datetime
     hwids: list = field(default_factory=list)
-    database_id: ObjectId | None = None
+    _id: ObjectId | None = None
 
     @staticmethod
     def create(
@@ -54,5 +54,8 @@ class Key:
             created=datetime.now(),
             valid_until=datetime.now() + valid_for,
         )
-
-
+    
+    def to_database_data(self) -> dict:
+        data = self.__dict__.copy()
+        data.pop("_id")
+        return data
