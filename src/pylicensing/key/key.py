@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from bson.objectid import ObjectId
 
@@ -16,9 +16,9 @@ class Key:
     A key provides all information related to a license such as
     the key itself, the owner of the key, HWIDs and expiration data.
 
-    The `KeyFormat` assigned to the key should be stored, as it can later be
-    used to validate that the key is of a correct format, to avoid checking
-    the database for a key that wouldn't possibly be valid to begin with.
+    The `KeyFormat` used to create the key should be remembered, as it can
+    later be used to validate that the key is of a correct format, to avoid
+    checking the database for a key that wouldn't possibly be valid to begin with.
 
     Note that, during key creation, it will not automatically be checked
     whether the key already exists, meaning you avoid choosing short key
@@ -33,15 +33,26 @@ class Key:
     owner: str
     hwid_locked: bool
     hwid_limit: int
-    format: KeyFormat
     created: datetime
     valid_until: datetime
     hwids: list = field(default_factory=list)
     database_id: ObjectId | None = None
 
-    def __hash__(self) -> int:
-        return hash(self.key)
-
     @staticmethod
-    def create(format: KeyFormat, **kwargs) -> Key:
-        return Key(generate_key(format), **kwargs)
+    def create(
+        format: KeyFormat,
+        owner: str,
+        hwid_locked: bool,
+        hwid_limit: int,
+        valid_for: timedelta,
+    ) -> Key:
+        return Key(
+            generate_key(format),
+            owner,
+            hwid_locked,
+            hwid_limit,
+            created=datetime.now(),
+            valid_until=datetime.now() + valid_for,
+        )
+
+

@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pylicensing"
+version = "0.0.1"
+authors = [
+  { name="Kenny Hommel", email="kennyhommel36@gmail.com" },
+]
+description = "Simple licensing helper using mongodb"
+readme = "README.md"
+requires-python = ">=3.6"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/kennyhml/pylicensing"
+"Bug Tracker" = "https://github.com/kennyhml/pylicensing/issues"

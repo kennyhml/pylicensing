@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass(frozen=True)
@@ -20,13 +20,25 @@ class KeyFormat:
     sections: int
     chars_per_section: int
     seperator: str
-    lowercase_ascii: bool
-    uppercase_ascii: bool
-    numeric_characters: bool
-    special_characters: bool
+    lowercase_ascii: bool = field(kw_only=True, default=False)
+    uppercase_ascii: bool = field(kw_only=True, default=True)
+    numeric_characters: bool = field(kw_only=True, default=False)
+    special_characters: bool = field(kw_only=True, default=False)
 
     def __post_init__(self) -> None:
-        if not any(
+        if not self.sections:
+            raise ValueError(f"Sections must be greater than 0")
+
+        elif not self.chars_per_section:
+            raise ValueError(f"Characters per section must be greater than 0")
+
+        elif self.seperator.isalpha() or self.seperator.isnumeric():
+            raise ValueError(f"Seperator cannot be numeric or alphabetical")
+
+        elif len(self.seperator) > 2:
+            raise ValueError(f"Seperator should be a single character")
+
+        elif not any(
             (
                 self.lowercase_ascii,
                 self.uppercase_ascii,
@@ -34,4 +46,4 @@ class KeyFormat:
                 self.special_characters,
             )
         ):
-            raise ValueError("Key format can't forbid all characters!")
+            raise ValueError("Key format cannot forbid all characters!")
