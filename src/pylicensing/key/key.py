@@ -51,8 +51,8 @@ class Key:
             owner,
             hwid_locked,
             hwid_limit,
-            created=datetime.now(),
-            valid_until=datetime.now() + valid_for,
+            created=datetime.now().replace(microsecond=0),
+            valid_until=(datetime.now() + valid_for).replace(microsecond=0),
         )
     
     def to_database_data(self) -> dict:

@@ -13,5 +13,4 @@ def get_key(key: str, collection: Collection) -> Key:
     data = collection.find_one({"key": key})
     if not data:
         raise LookupError(f"Could not find key {key} in {collection.name}")
-
-    return Key(key, **data)
+    return Key(**data)

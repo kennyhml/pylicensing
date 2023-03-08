@@ -1,20 +1,27 @@
-from datetime import datetime, timedelta
-from time import sleep
-from pymongo import MongoClient
-import dotenv
 import os
+from datetime import datetime, timedelta
+
+import dotenv
 import pytest
+from pymongo import MongoClient
 
 from pylicensing.key import Key, KeyFormat
-from pylicensing.managing.queries import add_key_to_database, remove_key_from_database
+from pylicensing.management.queries import (add_key_to_collection,
+                                            remove_key_from_collection)
+from pylicensing.validation import get_key, key_exists
 
 REG_FORMAT = KeyFormat(5, 5, "-")
 dotenv.load_dotenv(dotenv.find_dotenv())
 
-password = os.environ.get("FULL_PERM_PW")
+all_perm_password = os.environ.get("FULL_PERM_PW")
+read_only_password = os.environ.get("READ_ONLY_PW")
 
-test_client: MongoClient = MongoClient(
-    f"mongodb+srv://kennyhml:{password}@ccdb.uo7s992.mongodb.net/?retryWrites=true&w=majority"
+
+all_perm_conn: MongoClient = MongoClient(
+    f"mongodb+srv://kennyhml:{all_perm_password}@ccdb.uo7s992.mongodb.net/?retryWrites=true&w=majority"
+)
+read_only_conn: MongoClient = MongoClient(
+    f"mongodb+srv://read-only-user:{read_only_password}@ccdb.uo7s992.mongodb.net/?retryWrites=true&w=majority"
 )
 
 
@@ -57,8 +64,19 @@ def test_invalid_formats() -> None:
     with pytest.raises(ValueError):
         KeyFormat(5, 5, "-", uppercase_ascii=False)
 
+
 def test_key_upload() -> None:
     key = Key.create(REG_FORMAT, f"Test", True, 3, timedelta(30))
-    add_key_to_database(key, test_client.test.keys)
-    sleep(10)
-    remove_key_from_database(key, test_client.test.keys)
+    add_key_to_collection(key, all_perm_conn.test.keys)
+    remove_key_from_collection(key, all_perm_conn.test.keys)
+
+
+def test_key_read() -> None:
+    key = Key.create(REG_FORMAT, f"Test", True, 3, timedelta(30))
+    add_key_to_collection(key, all_perm_conn.test.keys)
+
+    assert key_exists(key.key, read_only_conn.test.keys)
+    queried_key = get_key(key.key, read_only_conn.test.keys)
+    assert queried_key.to_database_data() == key.to_database_data()
+
+    remove_key_from_collection(key, all_perm_conn.test.keys)
