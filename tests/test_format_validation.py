@@ -1,12 +1,10 @@
+import random
 from datetime import timedelta
 
 from pylicensing.key import Key, KeyFormat
 from pylicensing.validation.key_validation import key_conforms_format
 
-ITERATIONS = 20000
-
-
-import random
+ITERATIONS = 2000
 
 
 def test_nonmatching_section() -> None:

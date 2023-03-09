@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+import string
 
 
 @dataclass(frozen=True)
@@ -32,11 +33,15 @@ class KeyFormat:
         elif not self.chars_per_section:
             raise ValueError(f"Characters per section must be greater than 0")
 
-        elif self.seperator.isalpha() or self.seperator.isnumeric():
-            raise ValueError(f"Seperator cannot be numeric or alphabetical")
-
         elif len(self.seperator) > 2:
             raise ValueError(f"Seperator should be a single character")
+
+        elif (
+            self.seperator.isnumeric()
+            or self.seperator.isalpha()
+            or self.seperator in r"!§$%&/()[]\/+#<>"
+        ):
+            raise ValueError(f"Invalid seperator")
 
         elif not any(
             (
@@ -47,7 +52,3 @@ class KeyFormat:
             )
         ):
             raise ValueError("Key format cannot forbid all characters!")
-
-    
-
-

@@ -56,6 +56,8 @@ def test_invalid_formats() -> None:
     with pytest.raises(ValueError):
         KeyFormat(5, 5, "-", uppercase_ascii=False)
 
+    with pytest.raises(ValueError):
+        KeyFormat(5, 5, "/", uppercase_ascii=False)
 
 def test_key_upload() -> None:
     key = Key.create(REG_FORMAT, f"Test", True, 3, timedelta(30))

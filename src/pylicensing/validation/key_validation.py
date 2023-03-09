@@ -26,7 +26,7 @@ def key_conforms_format(
         return False
 
     key_string = key.replace(format.seperator, "")
-    specials = "!§$%&/()[]\/+#<>"
+    specials = r"!§$%&/()[]\/+#<>"
 
     for char in key_string:
         if char.islower() and not format.lowercase_ascii:

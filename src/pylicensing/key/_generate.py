@@ -28,6 +28,8 @@ def generate_key(format: KeyFormat) -> str:
 
 def _add_missing_characters(key: str, format: KeyFormat) -> str:
     def replace(key: str, index: int, new_char: str) -> str:
+        if key[index] == format.seperator:
+            index += 1
         return key[:index] + new_char + key[index + 1 :]
 
     if format.lowercase_ascii and not any(c.islower() for c in key):
@@ -50,9 +52,9 @@ def _add_missing_characters(key: str, format: KeyFormat) -> str:
         )
         return _add_missing_characters(key, format)
 
-    if format.special_characters and not any(c in "!§$%&/()[]\/+#<>" for c in key):
+    if format.special_characters and not any(c in r"!§$%&/()[]\/+#<>" for c in key):
         key = replace(
-            key, random.randrange(len(key)), random.choice("!§$%&/()[]\/+#<>")
+            key, random.randrange(len(key)), random.choice(r"!§$%&/()[]\/+#<>")
         )
 
     return key
