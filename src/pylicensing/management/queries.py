@@ -1,5 +1,4 @@
 from bson.objectid import ObjectId
-from importlib_metadata import Lookup
 from pymongo import MongoClient, errors
 from pymongo.collection import Collection
 

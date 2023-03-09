@@ -1,4 +1,4 @@
-from importlib_metadata import Lookup
+
 from pymongo import MongoClient
 from pymongo.collection import Collection
 from ..key import Key

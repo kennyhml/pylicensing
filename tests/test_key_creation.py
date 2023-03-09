@@ -13,15 +13,10 @@ from pylicensing.validation import get_key, key_exists
 REG_FORMAT = KeyFormat(5, 5, "-")
 dotenv.load_dotenv(dotenv.find_dotenv())
 
-all_perm_password = os.environ.get("FULL_PERM_PW")
-read_only_password = os.environ.get("READ_ONLY_PW")
+all_perm_conn: MongoClient = MongoClient(os.environ.get("ACCESS_CONN"))
 
-
-all_perm_conn: MongoClient = MongoClient(
-    f"mongodb+srv://kennyhml:{all_perm_password}@ccdb.uo7s992.mongodb.net/?retryWrites=true&w=majority"
-)
 read_only_conn: MongoClient = MongoClient(
-    f"mongodb+srv://read-only-user:{read_only_password}@ccdb.uo7s992.mongodb.net/?retryWrites=true&w=majority"
+    os.environ.get("READ_CONN")
 )
 
 
