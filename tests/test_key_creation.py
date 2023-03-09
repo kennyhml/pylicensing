@@ -6,19 +6,17 @@ import pytest
 from pymongo import MongoClient
 
 from pylicensing.key import Key, KeyFormat
-from pylicensing.management.queries import (add_key_to_collection,
-                                            remove_key_from_collection)
+from pylicensing.management.queries import (
+    add_key_to_collection,
+    remove_key_from_collection,
+)
 from pylicensing.validation import get_key, key_exists
 
 REG_FORMAT = KeyFormat(5, 5, "-")
 dotenv.load_dotenv(dotenv.find_dotenv())
 
 all_perm_conn: MongoClient = MongoClient(os.environ.get("ACCESS_CONN"))
-
-read_only_conn: MongoClient = MongoClient(
-    os.environ.get("READ_CONN")
-)
-
+read_only_conn: MongoClient = MongoClient(os.environ.get("READ_CONN"))
 
 def test_key_uniqueness() -> None:
     SAMPLES = 20000
@@ -37,7 +35,6 @@ def test_key_expiration_date() -> None:
 
 
 def test_invalid_formats() -> None:
-
     with pytest.raises(ValueError):
         KeyFormat(0, 5, "-", uppercase_ascii=False)
 

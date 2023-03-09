@@ -47,3 +47,7 @@ class KeyFormat:
             )
         ):
             raise ValueError("Key format cannot forbid all characters!")
+
+    
+
+

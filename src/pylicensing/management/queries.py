@@ -1,5 +1,4 @@
 from bson.objectid import ObjectId
-from pymongo import MongoClient, errors
 from pymongo.collection import Collection
 
 from ..exceptions import KeyAlreadyExistsError, KeyDoesntExistError
@@ -64,3 +63,4 @@ def remove_key_from_collection(
     result = collection.delete_one(data)
     if not result.deleted_count and not ignore_nonexistent:
         raise KeyDoesntExistError(f"{key.key} does not exist in {collection.name}")
+    

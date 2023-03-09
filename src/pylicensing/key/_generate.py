@@ -20,6 +20,39 @@ def generate_section(format: KeyFormat) -> str:
 
 def generate_key(format: KeyFormat) -> str:
     """Generates a key string given a format."""
-    return format.seperator.join(
+    key = format.seperator.join(
         generate_section(format) for _ in range(format.sections)
     )
+    return _add_missing_characters(key, format)
+
+
+def _add_missing_characters(key: str, format: KeyFormat) -> str:
+    def replace(key: str, index: int, new_char: str) -> str:
+        return key[:index] + new_char + key[index + 1 :]
+
+    if format.lowercase_ascii and not any(c.islower() for c in key):
+        key = replace(
+            key, random.randrange(len(key)), random.choice(string.ascii_lowercase)
+        )
+        return _add_missing_characters(key, format)
+
+    if format.uppercase_ascii and not any(c.isupper() for c in key):
+        key = replace(
+            key, random.randrange(len(key)), random.choice(string.ascii_uppercase)
+        )
+        return _add_missing_characters(key, format)
+
+    if format.numeric_characters and not any(c.isnumeric() for c in key):
+        key = replace(
+            key,
+            random.randrange(len(key)),
+            random.choice("".join(str(i) for i in range(10))),
+        )
+        return _add_missing_characters(key, format)
+
+    if format.special_characters and not any(c in "!§$%&/()[]\/+#<>" for c in key):
+        key = replace(
+            key, random.randrange(len(key)), random.choice("!§$%&/()[]\/+#<>")
+        )
+
+    return key
