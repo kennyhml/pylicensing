@@ -4,9 +4,21 @@ import string
 from .format import KeyFormat
 
 
-def generate_section(format: KeyFormat) -> str:
+def generate_key(format: KeyFormat) -> str:
+    """Returns a key string given a format.
+
+    Once created, it will be ensured that the key actually includes at least
+    one of each allowed character recursively until it does.
+    """
+    key = format.seperator.join(
+        _generate_section(format) for _ in range(format.sections)
+    )
+    return _add_missing_characters(key, format)
+
+
+def _generate_section(format: KeyFormat) -> str:
     """Generates a singular section of a key, the length and allowed
-    characters depend on the passed `format`.
+    characters depend on a passed `KeyFormat`.
     """
     mapped = {
         string.ascii_uppercase: format.uppercase_ascii,
@@ -18,15 +30,19 @@ def generate_section(format: KeyFormat) -> str:
     return "".join(random.choice(allowed) for _ in range(format.chars_per_section))
 
 
-def generate_key(format: KeyFormat) -> str:
-    """Generates a key string given a format."""
-    key = format.seperator.join(
-        generate_section(format) for _ in range(format.sections)
-    )
-    return _add_missing_characters(key, format)
-
-
 def _add_missing_characters(key: str, format: KeyFormat) -> str:
+    """Adds missing characters to a key string recursively, until it meets the
+    formats requirements.
+
+    For example, say a format specified to allow numeric characters. By chance,
+    no numeric character was chosen during key creation.
+
+    The key would now not conform to a `KeyFormat` that specifies to allow
+    numeric characters.
+
+    FIXME: Could definitely be improved in terms of lines.
+    """
+
     def replace(key: str, index: int, new_char: str) -> str:
         if key[index] == format.seperator:
             index += 1
@@ -56,5 +72,4 @@ def _add_missing_characters(key: str, format: KeyFormat) -> str:
         key = replace(
             key, random.randrange(len(key)), random.choice(r"!§$%&/()[]\/+#<>")
         )
-
     return key

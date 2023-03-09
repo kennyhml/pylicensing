@@ -38,15 +38,19 @@ class Key:
     hwids: list = field(default_factory=list)
     _id: ObjectId | None = None
 
-    @staticmethod
+    @classmethod
     def create(
+        cls,
         format: KeyFormat,
         owner: str,
         hwid_locked: bool,
         hwid_limit: int,
         valid_for: timedelta,
     ) -> Key:
-        return Key(
+        """Returns a `Key` created from a `KeyFormat` and other details.\n
+        The key will be randomly generated using said format during creation.
+        """
+        return cls(
             generate_key(format),
             owner,
             hwid_locked,
@@ -54,8 +58,13 @@ class Key:
             created=datetime.now().replace(microsecond=0),
             valid_until=(datetime.now() + valid_for).replace(microsecond=0),
         )
-    
+
     def to_database_data(self) -> dict:
+        """Turns a `Key` into the data that is valuable for the database.
+
+        For this, the `__dict__` of the `Key` is copied and the `_id` is popped
+        off, since mongodb sets its own `_id`.
+        """
         data = self.__dict__.copy()
         data.pop("_id")
         return data

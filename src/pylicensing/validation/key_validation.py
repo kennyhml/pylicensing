@@ -1,13 +1,26 @@
-from itertools import chain
 from ..key import Key, KeyFormat
 
 
 def key_conforms_format(
     key: Key | str, format: KeyFormat, *, show_reason: bool = False
 ) -> bool:
+    """Returns whether a `Key` conforms to a `KeyFormat`.
+
+    Parameters
+    ----------
+    key :class:`Key`:
+        The key to check
+
+    format :class:`KeyFormat`:
+        The format that the key should follow
+
+    show_reason :class:`bool`:
+        Whether to print the reason a key is not valid in the console.
+    """
+
     def _show_reason(reason) -> None:
         if show_reason:
-            print(f"Key format is not valid: {reason}")
+            print(f"Key format is not valid: {reason}.")
 
     if isinstance(key, Key):
         key = key.key
