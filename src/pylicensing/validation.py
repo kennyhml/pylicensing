@@ -1,5 +1,23 @@
+from .hwid_tools import add_device_hwid, device_hwid_allowed
 from .key import Key, KeyFormat
 
+
+def check_hwid(key: Key) -> None:
+    """Checks the HWID of a `Key`.
+
+    The HWID is valid if the current hwid is already registered, the key is not
+    HWID limited or the key still has free HWID slots, at which point the HWID
+    will be added.
+
+    Note that, if the HWID is added, this will only update the key object, not the
+    database entry of the key.
+    """
+    if not key.hwid_limit or device_hwid_allowed(key):
+        print("HWID valid.")
+        return
+    
+    print("New login detected, attempting to register hwid...")
+    add_device_hwid(key)
 
 def conforms_format(
     key: Key | str, format: KeyFormat, *, show_reason: bool = False

@@ -19,7 +19,6 @@ def get_device_hwid() -> str:
         print(f"HWID grab failed! {e}")
         raise exceptions.HWIDNotDeterminedError(e)
 
-
 def add_device_hwid(key: Key) -> None:
     """Adds the HWID of the current device to a `Key`.
 

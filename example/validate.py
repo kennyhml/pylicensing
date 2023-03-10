@@ -3,7 +3,8 @@ import os
 import dotenv
 from pymongo import MongoClient
 
-from pylicensing import KeyFormat, KeyManager, hwid_tools, validation
+from pylicensing import KeyFormat, KeyManager, validation, exceptions
+
 
 if __name__ == "__main__":
 
@@ -46,17 +47,10 @@ if __name__ == "__main__":
         print("Key has expired!")
         exit()
 
-    # Now we check whether the machine is allowed for this key
-    if not license_key.hwids:
-        # no devices are registered on this license yet
-        hwid_tools.add_device_hwid(license_key)
-        key_manager.update(license_key)
-    
-    elif hwid_tools.device_hwid_allowed(license_key):
-        # hwid already registered
-        print("Logged in successfully!")
-    else:
-        # The device is not already registered, attempt to register it.
-        # This will raise an error if the hwid limit is being exceeded
-        print("New login detected, attempting to register hwid...")
-        hwid_tools.add_device_hwid(license_key)
+    try:
+        validation.check_hwid(license_key)
+    except exceptions.ExceededMaximumHWIDError:
+        print("Login failed. Exceeded the maximum amount of HWIDs.") 
+        exit()
+
+    print("Login successful.")

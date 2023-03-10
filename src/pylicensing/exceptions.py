@@ -22,8 +22,8 @@ class LicenseKeyError(Exception):
 class ExceededMaximumHWIDError(LicenseKeyError):
     def __str__(self) -> str:
         return (
-            f"Attempted to exceed maximum HWID limit for {self.key}.\n"
-            f"{self.key.hwid_limit} allowed, registered {len(self.key.hwids)}:\n"
+            f"Attempted to exceed maximum HWID limit for {self.key.key}.\n"
+            f"{self.key.hwid_limit} allowed, {len(self.key.hwids)} registered.\n"
             f"{self.key.hwids}"
         )
     
