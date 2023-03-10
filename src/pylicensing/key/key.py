@@ -31,7 +31,6 @@ class Key:
 
     key: str
     owner: str
-    hwid_locked: bool
     hwid_limit: int
     created: datetime
     valid_until: datetime
@@ -43,7 +42,6 @@ class Key:
         cls,
         format: KeyFormat,
         owner: str,
-        hwid_locked: bool,
         hwid_limit: int,
         valid_for: timedelta,
     ) -> Key:
@@ -53,7 +51,6 @@ class Key:
         return cls(
             generate_key(format),
             owner,
-            hwid_locked,
             hwid_limit,
             created=datetime.now().replace(microsecond=0),
             valid_until=(datetime.now() + valid_for).replace(microsecond=0),

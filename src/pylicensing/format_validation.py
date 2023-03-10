@@ -1,4 +1,4 @@
-from ..key import Key, KeyFormat
+from .key import Key, KeyFormat
 
 
 def key_conforms_format(

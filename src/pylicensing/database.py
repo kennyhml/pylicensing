@@ -1,3 +1,4 @@
+from datetime import datetime
 from bson.objectid import ObjectId
 from pymongo.collection import Collection
 
@@ -112,12 +113,7 @@ class KeyManager:
         keys = []
         for key in results:
             keys.append(Key(**key))
-        return keys 
-
-    def wipe_database(self) -> None:
-        res = self._collection.delete_many({"key": {"$exists": True}})
-        print(f"Deleted {res.deleted_count} entries in {self._collection.name}!")
-
+        return keys
 
 
 

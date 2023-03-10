@@ -34,6 +34,9 @@ def add_device_hwid(key: Key) -> None:
     `HWIDAlreadyRegisteredError`
         If the HWID is already registered on this key
     """
+    if not key.hwid_limit:
+        return
+
     if len(key.hwids) >= key.hwid_limit:
         raise exceptions.ExceededMaximumHWIDError(key)
 
@@ -46,7 +49,7 @@ def add_device_hwid(key: Key) -> None:
 
 def device_hwid_allowed(key: Key) -> bool:
     """Returns whether the HWID of the current device is registered on a `Key`."""
-    return get_device_hwid() in key.hwids
+    return get_device_hwid() in key.hwids or not key.hwid_limit
 
 
 

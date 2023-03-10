@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 import dotenv
 import pytest
@@ -17,14 +17,14 @@ database_manger = KeyManager(all_perm_conn.test.keys)
 
 def test_key_upload() -> None:
     """Checks whether we can successfully create, upload and remove a key"""
-    key = Key.create(REG_FORMAT, f"Test", True, 3, timedelta(30))
+    key = Key.create(REG_FORMAT, f"Test", 3, timedelta(30))
     database_manger.add_to_collection(key)
     database_manger.remove_from_collection(key)
 
 
 def test_key_read() -> None:
     """Checks that we can successfully create, upload, read then delete a key."""
-    key = Key.create(REG_FORMAT, f"Test", True, 3, timedelta(30))
+    key = Key.create(REG_FORMAT, f"Test", 3, timedelta(30))
     database_manger.add_to_collection(key)
 
     assert database_manger.exists(key.key)
@@ -37,7 +37,7 @@ def test_key_read() -> None:
 def test_key_register_hwid() -> None:
     """Checks that we can create a key with a HWID and then add that HWID
     to the database, and retrieve it the same."""
-    key = Key.create(REG_FORMAT, "Test", True, 1, timedelta(30))
+    key = Key.create(REG_FORMAT, "Test", 1, timedelta(30))
 
     hwid_tools.add_device_hwid(key)
     assert key.hwids[0] == hwid_tools.get_device_hwid()
@@ -60,7 +60,7 @@ def test_key_register_hwid() -> None:
 
 def test_key_update() -> None:
     """Checks whether updating a key already in the database works as expected"""
-    key = Key.create(REG_FORMAT, "Test", True, 1, timedelta(30))
+    key = Key.create(REG_FORMAT, "Test", 1, timedelta(30))
     hwid_tools.add_device_hwid(key)
 
     database_manger.add_to_collection(key)
@@ -84,11 +84,12 @@ def test_wipe_database() -> None:
     KEYS = 10
 
     keys = [
-        Key.create(REG_FORMAT, f"Test{i}", True, 1, timedelta(30)) for i in range(KEYS)
+        Key.create(REG_FORMAT, f"Test{i}", 1, timedelta(30)) for i in range(KEYS)
     ]
     for key in keys:
         database_manger.add_to_collection(key)
 
-    database_manger.wipe_database()
+    for key in keys:
+        database_manger.remove_from_collection(key)
 
     assert not database_manger.get_all_keys()
