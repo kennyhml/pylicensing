@@ -32,7 +32,7 @@ class KeyFormat:
         elif not self.chars_per_section:
             raise ValueError(f"Characters per section must be greater than 0")
 
-        elif len(self.seperator) > 2:
+        elif len(self.seperator) >= 2:
             raise ValueError(f"Seperator should be a single character")
 
         elif (

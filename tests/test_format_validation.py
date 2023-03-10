@@ -46,3 +46,7 @@ def test_nonmatching_character_rules() -> None:
 
         key = Key.create(KEY_FORMAT, "Test", True, 1, timedelta(30))
         assert key_conforms_format(key, BAD_FORMAT) == (key_rules == format_rules)
+
+
+
+        
