@@ -2,8 +2,7 @@ from datetime import timedelta
 
 import pytest
 
-from pylicensing import hwid_tools, exceptions
-from pylicensing.key import Key, KeyFormat
+from pylicensing import Key, KeyFormat, exceptions, hwid_tools
 
 REG_FORMAT = KeyFormat(5, 5, "-")
 

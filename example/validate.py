@@ -1,10 +1,9 @@
 import os
-from datetime import datetime
 
 import dotenv
 from pymongo import MongoClient
 
-from pylicensing import KeyFormat, KeyManager, format_validation, hwid_tools
+from pylicensing import KeyFormat, KeyManager, hwid_tools, validation
 
 if __name__ == "__main__":
 
@@ -25,7 +24,7 @@ if __name__ == "__main__":
     
     # Now, before even establishing a connection to our database, we check whether the key matches the format
     # it should have been created with to begin with. In the case of this example, the format is valid.
-    if not format_validation.key_conforms_format(key, format, show_reason=True):
+    if not validation.conforms_format(key, format, show_reason=True):
         print("The key is not valid!")
         exit()
 
@@ -43,7 +42,7 @@ if __name__ == "__main__":
         exit()
 
     # Now we can check whether the key has expired
-    if license_key.valid_until < datetime.now():
+    if license_key.expired:
         print("Key has expired!")
         exit()
 

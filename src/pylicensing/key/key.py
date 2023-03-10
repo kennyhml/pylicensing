@@ -55,6 +55,10 @@ class Key:
             created=datetime.now().replace(microsecond=0),
             valid_until=(datetime.now() + valid_for).replace(microsecond=0),
         )
+    
+    @property
+    def expired(self) -> bool:
+        return datetime.now() >= self.valid_until
 
     def to_database_data(self) -> dict:
         """Turns a `Key` into the data that is valuable for the database.

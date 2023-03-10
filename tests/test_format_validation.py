@@ -1,8 +1,7 @@
 import random
 from datetime import timedelta
 
-from pylicensing.key import Key, KeyFormat
-from pylicensing.format_validation import key_conforms_format
+from pylicensing import Key, KeyFormat, validation
 
 ITERATIONS = 2000
 
@@ -17,7 +16,7 @@ def test_nonmatching_section() -> None:
         BAD_FORMAT = KeyFormat(*bad_format, "-")
         key = Key.create(KEY_FORMAT, "Test", 1, timedelta(30))
 
-        assert key_conforms_format(key, BAD_FORMAT) == (key_format == bad_format)
+        assert validation.conforms_format(key, BAD_FORMAT) == (key_format == bad_format)
 
 
 def build_random_format() -> dict:
@@ -45,7 +44,7 @@ def test_nonmatching_character_rules() -> None:
         BAD_FORMAT = KeyFormat(5, 5, "-", **format_rules)
 
         key = Key.create(KEY_FORMAT, "Test", 1, timedelta(30))
-        assert key_conforms_format(key, BAD_FORMAT) == (key_rules == format_rules)
+        assert validation.conforms_format(key, BAD_FORMAT) == (key_rules == format_rules)
 
 
 
