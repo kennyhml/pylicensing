@@ -52,5 +52,5 @@ if __name__ == "__main__":
     except exceptions.ExceededMaximumHWIDError:
         print("Login failed. Exceeded the maximum amount of HWIDs.") 
         exit()
-
+    key_manager.update(license_key)
     print("Login successful.")
