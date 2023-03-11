@@ -22,7 +22,7 @@ You can still use pylicensing on your user client, as you could for example chec
 - Easy database management and queries
 
 # Example
-You can also check the [examples folder](https://github.com/kennyhml/pylicensing/edit/master/README.md) in the repository for more detailed examples.
+You can also check the [examples folder](https://github.com/kennyhml/pylicensing/tree/master/example) in the repository for more detailed examples.
 
 ## Creating a `Key` object
 ```py
