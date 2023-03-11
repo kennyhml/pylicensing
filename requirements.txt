@@ -1,2 +1,3 @@
 pymongo
 py-machineid
+python-dotenvks
