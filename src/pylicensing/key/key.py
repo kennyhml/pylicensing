@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
+from typing import Optional
 
 from bson.objectid import ObjectId
 
@@ -35,6 +36,7 @@ class Key:
     created: datetime
     valid_until: datetime
     hwids: list = field(default_factory=list)
+    ip: Optional[str] = None
     _id: ObjectId | None = None
 
     @classmethod
@@ -44,6 +46,7 @@ class Key:
         owner: str,
         hwid_limit: int,
         valid_for: timedelta,
+        ip: Optional[str] = None
     ) -> Key:
         """Returns a `Key` created from a `KeyFormat` and other details.\n
         The key will be randomly generated using said format during creation.
@@ -54,8 +57,9 @@ class Key:
             hwid_limit,
             created=datetime.now().replace(microsecond=0),
             valid_until=(datetime.now() + valid_for).replace(microsecond=0),
+            ip=ip
         )
-    
+
     @property
     def expired(self) -> bool:
         return datetime.now() >= self.valid_until
@@ -68,4 +72,8 @@ class Key:
         """
         data = self.__dict__.copy()
         data.pop("_id")
+
+        data["created"] = data["created"].isoformat()
+        data["valid_until"] = data["valid_until"].isoformat()
+
         return data
