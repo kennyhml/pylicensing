@@ -7,7 +7,6 @@ from pymongo import MongoClient
 from pylicensing import Key, KeyFormat, KeyManager
 
 if __name__ == "__main__":
-
     # first we create the format of the key. If you use a uniform format for all keys on
     # certain application, it can later be useful when validating the key on the client side
     # because if it does not conform to the format you can avoid checking the database.
@@ -23,7 +22,7 @@ if __name__ == "__main__":
     dotenv.load_dotenv(dotenv.find_dotenv())
 
     # Now I create a key with the format we just specified
-    key = Key.create(format, "Some One", hwid_limit=1, valid_for=timedelta(days=7))
+    key = Key.create(format, ".kenero", hwid_limit=1, valid_for=timedelta(days=900))
 
     # I establish the connection to mongodb and pass the collection the keys are stored in to the
     # pylicensing key_manager
